@@ -13,3 +13,16 @@ create table users(
 
 --@block
 select * from users 
+--@block 
+describe users
+
+--@block
+alter table users modify column user_profile varchar(255) default 'https://i.pinimg.com/736x/09/21/fc/0921fc87aa989330b8d403014bf4f340.jpg'
+
+
+create table presentations(
+    presentation_id int primary key auto_increment,
+    presentation_title varchar(100) not null,
+    presentation_date DATE FORMAT 'dd.mm.yyyy',
+    is_accepted boolean default
+)

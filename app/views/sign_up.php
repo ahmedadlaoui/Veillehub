@@ -344,7 +344,7 @@ body {
                 <button type="submit" class="sign-in-btn" name="submit_sign_up">Create Account</button>
 
                 <p class="register-link">
-                    Already have an account? <a href="sign_in.php">Sign in</a>
+                    Already have an account? <a href="/manager/public/sign_in">Sign in</a>
                 </p>
             </form>
 

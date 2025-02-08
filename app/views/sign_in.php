@@ -8,6 +8,25 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+    --app-theme: #fbff92;
+    --app-theme-rgb: 255, 217, 0;
+    --app-theme-color: #000000;
+    --app-theme-color-rgb: 0, 0, 0;
+    --background: #252525;
+    --surface: #161A1D;
+    --surface-light: #2D353C;
+    --text: #ffffff;
+    --text-light: #999999;
+    --border: #cacaca;
+    --shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
         body {
             display: flex;
             flex-direction: column;
@@ -276,14 +295,14 @@
                 <p>Welcome back! Please sign in to continue.</p>
             </div>
 
-            <form>
+            <form action="/manager/public/sign_in" method="POST">
                 <div class="form-group">
-                    <input type="email" class="form-input" placeholder="Email address" required>
+                    <input type="email" class="form-input" placeholder="Email address" name="email" required>
                     <i class="fas fa-envelope"></i>
                 </div>
 
                 <div class="form-group">
-                    <input type="password" class="form-input" placeholder="Password" required>
+                    <input type="password" class="form-input" placeholder="Password" name="password" required>
                     <i class="fas fa-lock"></i>
                 </div>
 

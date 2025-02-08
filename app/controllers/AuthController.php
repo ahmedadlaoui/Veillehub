@@ -6,15 +6,20 @@ require_once (__DIR__ . '/../../core/BaseController.php');
 
 class AuthController extends BaseController {
     private $UserModel;
+    private $connetion;
 
     public function __construct() {
         $db = Db::Getinstanse();
         $this->UserModel = new User($db);
+        $this->connetion = $db->getconnection();
     }
 
 
     public function showRegister() {
         $this->render('sign_up');
+    }
+    public function showlogin() {
+        $this->render('sign_in');
     }
 
     public function Register() {
@@ -30,10 +35,22 @@ class AuthController extends BaseController {
             $result = $this->UserModel->sign_up($data);
 
             if ($result['success']) {
-                echo $result['message'];
+                header('Location: /manager/public/sign_up');
+            exit();
             } else {
                 echo $result['message'];
             }
+        }
+    }
+
+    public function signin(){
+        
+        if ($_SERVER["REQUEST_METHOD"] == "POST") {
+            $email = $_POST['email'];
+            $password = $_POST['password'];
+
+            $this->UserModel->login($email,$password);
+
         }
     }
 }

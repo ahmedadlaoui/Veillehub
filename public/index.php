@@ -8,6 +8,8 @@ session_start();
 require_once __DIR__ . '/../core/Router.php';
 require_once __DIR__ . '/../core/Route.php';
 require_once __DIR__ . '/../app/controllers/AuthController.php';
+require_once __DIR__ . '/../app/controllers/studentController.php';
+require_once __DIR__ . '/../app/controllers/instructorcontroller.php';
 
 $router = new Router();
 Route::setRouter($router);
@@ -15,6 +17,13 @@ Route::setRouter($router);
 Route::get('/sign_up', ['AuthController', 'showRegister']);
 Route::post('/sign_up', ['AuthController', 'Register']);
 
+Route::get('/sign_in', ['AuthController', 'showlogin']);
+Route::post('/sign_in', ['AuthController', 'signin']);
+
+Route::get('/Student_board', ['studentController', 'showstudentboard']);
+Route::post('/Student_board', ['studentController', 'logout']);
+
+Route::get('/Instructor_board', ['instructorontroller', 'showinstructorboard']);
 
 $uri = $_SERVER['REQUEST_URI'];
 $method = $_SERVER['REQUEST_METHOD'];
