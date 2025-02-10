@@ -32,6 +32,10 @@ class studentController extends BaseController {
             'role' => $_SESSION['role'],
             'profile' => $_SESSION['profile']
         ];
+
+        require_once (__DIR__ . '/../models/presentation.php');
+        $presentationModel = new presentation(Db::Getinstanse());
+        $data['presentations'] = $presentationModel->getAllPresentations();
     
         $this->render('Student_board', $data);
     }

@@ -24,6 +24,7 @@ Route::get('/Student_board', ['studentController', 'showstudentboard']);
 Route::post('/Student_board', ['studentController', 'logout']);
 
 Route::get('/Instructor_board', ['instructorontroller', 'showinstructorboard']);
+Route::post('/Instructor_board', ['instructorontroller', 'addPresentation']);
 
 $uri = $_SERVER['REQUEST_URI'];
 $method = $_SERVER['REQUEST_METHOD'];

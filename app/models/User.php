@@ -90,4 +90,10 @@ class User {
         session_destroy();
         header("location: /manager/public/sign_in");
     }
+
+    public function getallusers(){
+        $stmt =  $this->db->prepare("SELECT * FROM users");
+        $stmt->execute();
+        return $stmt->fetchall(PDO::FETCH_ASSOC);
+    }
 }

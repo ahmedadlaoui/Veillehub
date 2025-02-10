@@ -19,10 +19,22 @@ describe users
 --@block
 alter table users modify column user_profile varchar(255) default 'https://i.pinimg.com/736x/09/21/fc/0921fc87aa989330b8d403014bf4f340.jpg'
 
+--@block
+CREATE TABLE presentations (
+    presentation_id INT PRIMARY KEY AUTO_INCREMENT,
+    presentation_title VARCHAR(100) NOT NULL,
+    presentation_date DATE NOT NULL,
+    is_accepted TINYINT(1) DEFAULT 0 
+);  
+--@block
+SELECT * FROM assigned_presentations
 
-create table presentations(
-    presentation_id int primary key auto_increment,
-    presentation_title varchar(100) not null,
-    presentation_date DATE FORMAT 'dd.mm.yyyy',
-    is_accepted boolean default
-)
+--@block
+
+CREATE TABLE assigned_presentations (
+    user_id INT NOT NULL,
+    presentation_id INT NOT NULL,
+    PRIMARY KEY (user_id, presentation_id),
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    FOREIGN KEY (presentation_id) REFERENCES presentations(presentation_id) ON DELETE CASCADE
+);

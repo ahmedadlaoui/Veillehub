@@ -1,6 +1,4 @@
 <?php
-// echo $data['profile'];
-//   die('c');
 
 ?>
 
@@ -20,19 +18,12 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.min.css" rel="stylesheet" />
 
-    <!-- CSS for full calender -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.min.css" rel="stylesheet" />
-    <!-- JS for jQuery -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <!-- JS for full calender -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.min.js"></script>
-    <!-- bootstrap css and js -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" />
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-
 </head>
-
+<style>
+    li{
+        list-style: none;
+    }
+</style>
 <body>
     <div id="calendar"></div>
     <header class="main-header">
@@ -105,10 +96,7 @@
     </div>
 
     <div class="calendar-grid">
-        <div class="calendar-days">
-
-        </div>
-
+        <div class="calendar-days" id="calendarDays"></div>
         <div class="calendar-dates" id="calendarDates"></div>
     </div>
 </div>
@@ -424,7 +412,7 @@
         background: var(--surface-light);
     }
 
-    /* Calendar Section */
+
     .calendar-section {
         background: var(--surface-light);
         border-radius: 12px;
@@ -647,21 +635,21 @@
 
 
 <script>
+var presentations = <?php echo json_encode($data['presentations'] ?? []); ?>;
+</script>
+
+<script>
 document.addEventListener("DOMContentLoaded", function(){
-    // Initialize current month and year using moment.js
-    let currentMonth = moment().month();  // moment months are zero-indexed (0=January)
-    let currentYear = moment().year();
+    let currentMonth = moment();
 
     function renderCalendar(month, year) {
-        const calendarDaysContainer = document.querySelector('.calendar-days');
+        const calendarDaysContainer = document.getElementById('calendarDays');
         const calendarDatesContainer = document.getElementById('calendarDates');
-
-        // Clear existing content
         calendarDaysContainer.innerHTML = "";
         calendarDatesContainer.innerHTML = "";
 
-        // Set the header for weekdays (Monday to Friday)
-        const weekdays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
+        // Weekday headers (Monday - Friday)
+        const weekdays = ['Mon','Tue','Wed','Thu','Fri'];
         weekdays.forEach(function(day) {
             let dayCell = document.createElement('div');
             dayCell.className = 'day-cell';
@@ -669,51 +657,66 @@ document.addEventListener("DOMContentLoaded", function(){
             calendarDaysContainer.appendChild(dayCell);
         });
 
-        // Get the start and end of the month using moment.js
+
+        document.getElementById("calendarMonth").textContent = moment([year, month]).format("MMMM YYYY");
+
         let startOfMonth = moment([year, month]).startOf('month');
         let endOfMonth = moment([year, month]).endOf('month');
-
-        // Loop through the entire month and push only weekdays into a workingDays array
-        let m = moment(startOfMonth);
+        let dateIterator = moment(startOfMonth);
         let workingDays = [];
-        while(m.month() === month) {
-            const dayOfWeek = m.day();  // Sunday=0, Monday=1 ... Saturday=6
-            if (dayOfWeek >= 1 && dayOfWeek <= 5) {  // Only Monday to Friday
-                workingDays.push(m.date());
+        while(dateIterator.isSameOrBefore(endOfMonth, 'day')) {
+            if(dateIterator.day() >= 1 && dateIterator.day() <= 5) { 
+                workingDays.push(moment(dateIterator));
             }
-            m.add(1, 'day');
+            dateIterator.add(1, 'day');
         }
 
-        // Populate the calendar-dates container with the working day cells
-        workingDays.forEach(function(date) {
-            let dateCell = document.createElement('div');
-            dateCell.className = 'date-cell';
-            dateCell.textContent = date;
-            calendarDatesContainer.appendChild(dateCell);
-        });
 
-        // Update the calendar header with the formatted month and year
-        document.getElementById("calendarMonth").textContent =
-            moment([year, month]).format("MMMM YYYY");
+        workingDays.forEach(function(dayObj) {
+            let formattedDay = dayObj.format("YYYY-MM-DD");
+            let dayCell = document.createElement('div');
+            dayCell.className = 'date-cell';
+
+            // Add day number header
+            let header = document.createElement('div');
+            header.className = 'date-header';
+            header.textContent = dayObj.date();
+            dayCell.appendChild(header);
+
+        
+            let presForDay = presentations.filter(function(p) {
+                return p.presentation_date === formattedDay;
+            });
+            if(presForDay.length > 0) {
+                let list = document.createElement('ul');
+                list.className = "pres-list";
+                presForDay.forEach(function(p) {
+                    let li = document.createElement('li');
+                    li.textContent = p.presentation_title;
+                    list.appendChild(li);
+
+                    let ppl = document.createElement('li');
+                    ppl.textContent = p.assigned_users;
+                    list.appendChild(ppl);
+                });
+                dayCell.appendChild(list);
+            }
+
+            calendarDatesContainer.appendChild(dayCell);
+        });
     }
 
-    // Month navigation
-    document.getElementById("prevMonth").addEventListener("click", function(){
-        let newDate = moment([currentYear, currentMonth]).subtract(1, 'month');
-        currentMonth = newDate.month();
-        currentYear = newDate.year();
-        renderCalendar(currentMonth, currentYear);
+    document.getElementById("prevMonth").addEventListener('click', function(){
+        currentMonth = currentMonth.subtract(1, 'month');
+        renderCalendar(currentMonth.month(), currentMonth.year());
     });
 
-    document.getElementById("nextMonth").addEventListener("click", function(){
-        let newDate = moment([currentYear, currentMonth]).add(1, 'month');
-        currentMonth = newDate.month();
-        currentYear = newDate.year();
-        renderCalendar(currentMonth, currentYear);
+    document.getElementById("nextMonth").addEventListener('click', function(){
+        currentMonth = currentMonth.add(1, 'month');
+        renderCalendar(currentMonth.month(), currentMonth.year());
     });
 
-    // Render today's calendar on page load.
-    renderCalendar(currentMonth, currentYear);
+    renderCalendar(currentMonth.month(), currentMonth.year());
 });
 </script>
 

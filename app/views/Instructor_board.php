@@ -1,28 +1,7 @@
 <?php
-// Dummy data for demonstration if none is provided
-if (empty($data['users'])) {
-    $data['users'] = [
-        ['id' => 1, 'name' => 'Alice'],
-        ['id' => 2, 'name' => 'Bob'],
-        ['id' => 3, 'name' => 'Charlie'],
-        ['id' => 4, 'name' => 'David'],
-        ['id' => 5, 'name' => 'Eve'],
-        ['id' => 6, 'name' => 'Frank'],
-        ['id' => 7, 'name' => 'Grace']
-    ];
-}
-if (empty($data['suggested'])) {
-    $data['suggested'] = [
-        ['title' => 'Advanced Python'],
-        ['title' => 'Machine Learning 101'],
-        ['title' => 'Cloud Strategies'],
-        ['title' => 'DevOps Best Practices'],
-        ['title' => 'Cybersecurity Deep Dive'],
-        ['title' => 'Modern JavaScript'],
-        ['title' => 'Responsive Web Design'],
-        ['title' => 'Data Analysis with R']
-    ];
-}
+
+// var_dump($data['users']);
+// die();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -38,7 +17,7 @@ if (empty($data['suggested'])) {
 </head>
 <body>
     <div id="calendar"></div>
-    <!-- Main Header -->
+
     <header class="main-header">
         <div class="header-left">
             <div class="logo">
@@ -64,7 +43,6 @@ if (empty($data['suggested'])) {
         </div>
     </header>
 
-    <!-- Vertical Sidebar -->
     <nav class="vertical-nav">
         <div class="sidebar-profile">
             <div class="profile-image">
@@ -101,7 +79,7 @@ if (empty($data['suggested'])) {
     <!-- Main Content Area -->
     <div class="main-area">
         <main class="main-content">
-            <!-- Add Presentation Section -->
+
             <section class="add-presentation-section">
                 <h2>Add a Presentation</h2>
                 <form action="/manager/public/Instructor_board" method="POST" class="add-presentation-form">
@@ -115,13 +93,13 @@ if (empty($data['suggested'])) {
                     </div>
                     <div class="form-group assign-users">
                         <label>Assign To:</label>
-                        <!-- Live Search Input -->
+
                         <input type="text" id="userSearch" placeholder="Search users...">
                         <div class="user-list">
-                            <?php foreach ($data['users'] as $user): ?>
+                            <?php foreach ($data['users'] ?? [] as $user): ?>
                                 <div class="user-item">
-                                    <input type="checkbox" name="assigned_users[]" value="<?= $user['id'] ?>" id="user-<?= $user['id'] ?>">
-                                    <label for="user-<?= $user['id'] ?>"><?= $user['name'] ?></label>
+                                    <input type="checkbox" name="assigned_users[]" value="<?= $user['user_id'] ?>" id="user-<?= $user['user_id'] ?>">
+                                    <label for="user-<?= $user['user_id'] ?>"> <?php echo $user['user_firstname'] . " " . $user['user_lastname']; ?></label>
                                 </div>
                             <?php endforeach; ?>
                         </div>
@@ -134,17 +112,6 @@ if (empty($data['suggested'])) {
                 </form>
             </section>
 
-            <!-- Suggested Presentations Section -->
-            <section class="suggested-presentations-section">
-                <h2>Suggested Presentations</h2>
-                <div class="suggestion-list">
-                    <?php foreach ($data['suggested'] as $suggestion): ?>
-                        <div class="presentation">
-                            <h4><?= $suggestion['title']; ?></h4>
-                        </div>
-                    <?php endforeach; ?>
-                </div>
-            </section>
         </main>
     </div>
 
@@ -566,7 +533,6 @@ if (empty($data['suggested'])) {
         }
     </style>
 
-    <!-- JavaScript for Live Search in the Assign Users Container -->
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const userSearch = document.getElementById('userSearch');
